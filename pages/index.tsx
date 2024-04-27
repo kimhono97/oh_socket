@@ -1,7 +1,7 @@
 import type { NextPage } from 'next'
 import Head from 'next/head'
-import Image from 'next/image'
 import styles from '../styles/Home.module.css'
+import Link from 'next/link'
 
 const Home: NextPage = () => {
   return (
@@ -22,15 +22,15 @@ const Home: NextPage = () => {
         </p>
 
         <div className={styles.grid}>
-          <a href="/recv/" className={styles.card}>
+          <Link href={"/recv/"} className={styles.card}>
             <h2>Receiver &rarr;</h2>
             <p>Receive actions from senders. Join in a room, and the received action will be shown your screen.</p>
-          </a>
+          </Link>
 
-          <a href="/send/" className={styles.card}>
+          <Link href="/send/" className={styles.card}>
             <h2>Sender &rarr;</h2>
             <p>Send actions to receivers. Make a room, and click the buttons shown your screen to send actions.</p>
-          </a>
+          </Link>
         </div>
       </main>
 
