@@ -49,16 +49,35 @@ app.prepare().then(() => {
                 console.log("rooms :", getAllRooms());
             });
             socket.on("sendNumber", (roomId, data) => {
-                if (io.sockets.adapter.rooms.has(roomId)) {
-                    console.log("sendNumber", { roomId, data });
-                    io.to(roomId).emit("numData", data);
+                if (!io.sockets.adapter.rooms.has(roomId)) {
+                    socket.join(roomId);
                 }
+                console.log("sendNumber", { roomId, data });
+                socket.to(roomId).emit("numData", data);
             });
             socket.emit("onApiMode");
         });
         socket.on("getAllRooms", () => {
             const rooms = getAllRooms();
             socket.emit("allRooms", JSON.stringify(rooms));
+        });
+        socket.on("moveToRoom", (roomId) => {
+            if (io.sockets.adapter.rooms.has(roomId)) {
+                socket.rooms.forEach((_, key) => {
+                    if (socket.id != key) {
+                        socket.leave(key);
+                    }
+                });
+                socket.join(roomId);
+                console.log("moveToRoom", roomId);
+            }
+        });
+        socket.on("leaveRooms", () => {
+            socket.rooms.forEach((_, key) => {
+                if (socket.id != key) {
+                    socket.leave(key);
+                }
+            });
         });
     });
 

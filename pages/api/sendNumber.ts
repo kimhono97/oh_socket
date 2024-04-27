@@ -1,6 +1,6 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import type { NextApiRequest, NextApiResponse } from 'next'
-import { io } from "socket.io-client";
+import ApiSocket from '../../util/ApiSocket';
 
 type Data = {
   msg: string
@@ -25,10 +25,9 @@ export default async function handler(
     res.status(400).json({ msg: "not a number" });
     return;
   }
-  const socket = io("http://localhost:3000");
-  socket.on("onApiMode", () => {
-    socket.emit("sendNumber", strRoom, nData.toString());
+  const pApiSocket = ApiSocket.s_GetInstance();
+  pApiSocket.DoAction(() => {
+    pApiSocket.socket.emit("sendNumber", strRoom, nData.toString());
     res.status(200).json({ msg: "requested" });
   });
-  socket.emit("setApiMode");
 }

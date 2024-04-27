@@ -3,7 +3,7 @@
 }
 
 .main {
-  min-height: 100vh;
+  min-height: 90vh;
   padding: 4rem 0;
   flex: 1;
   display: flex;
@@ -48,6 +48,11 @@
 .title,
 .description {
   text-align: center;
+}
+
+.rolename {
+  font-weight: bold;
+  font-size: 2rem;
 }
 
 .description {
@@ -106,6 +111,11 @@
 .logo {
   height: 1em;
   margin-left: 0.5rem;
+}
+
+hr.divider {
+  width: 70%;
+  margin: 2rem 0;
 }
 
 @media (max-width: 600px) {

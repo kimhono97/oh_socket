@@ -1,0 +1,51 @@
+.container {
+  padding: 0 2rem;
+}
+
+.grid {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  max-width: 600px;
+}
+
+.card {
+  font-size: 2rem;
+  font-weight: bold;
+
+  margin: 1rem;
+  padding: 1rem 1.5rem;
+  text-align: left;
+  color: #ffffff;
+  background-color: #666666;
+  text-decoration: none;
+  border: 1px solid #eaeaea;
+  border-radius: 10px;
+  transition: color 0.15s ease, border-color 0.15s ease;
+  max-width: 300px;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.card.selected:not(:disabled),
+.card:focus:not(:disabled),
+.card:active:not(:disabled) {
+  background-color: #0070f3;
+}
+
+.card:disabled.selected {
+  background-color: #f37000;
+}
+
+@media (max-width: 500px) {
+  .grid {
+    width: 100%;
+  }
+}
+
+@media (prefers-color-scheme: dark) {
+  .card {
+    border-color: #222;
+  }
+}
