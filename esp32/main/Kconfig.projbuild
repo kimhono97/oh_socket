@@ -1,4 +1,4 @@
-menu "Example Configuration"
+menu "OH-Socket-ESP32 Configuration"
 
     config ESP_WIFI_SSID
         string "WiFi SSID"
@@ -63,5 +63,57 @@ menu "Example Configuration"
         config ESP_WIFI_AUTH_WAPI_PSK
             bool "WAPI PSK"
     endchoice
+
+    config GPIO_OUTPUT_DATA0
+        int "GPIO output pin output data bit 0"
+        range 18 23
+        default 18
+        help
+            GPIO pin number to be used as GPIO_OUTPUT_DATA0.
+    config GPIO_OUTPUT_DATA1
+        int "GPIO output pin output data bit 1"
+        range 18 23
+        default 19
+        help
+            GPIO pin number to be used as GPIO_OUTPUT_DATA1.
+    config GPIO_OUTPUT_DATA2
+        int "GPIO output pin output data bit 2"
+        range 18 23
+        default 21
+        help
+            GPIO pin number to be used as GPIO_OUTPUT_DATA2.
+    config GPIO_OUTPUT_DATA3
+        int "GPIO output pin output data bit 3"
+        range 18 23
+        default 22
+        help
+            GPIO pin number to be used as GPIO_OUTPUT_DATA3.
+    config GPIO_OUTPUT_CLOCK
+        int "GPIO output pin output data clock"
+        range 18 23
+        default 23
+        help
+            GPIO pin number to be used as GPIO_OUTPUT_CLOCK.
+
+    config GPIO_OUTPUT_DSTROBE
+        int "GPIO output pin display strobe"
+        range 0 2
+        default 0
+        help
+            GPIO pin number to be used as GPIO_OUTPUT_DSTROBE.
+
+    config GPIO_OUTPUT_DCLOCK
+        int "GPIO output pin display clock"
+        range 0 2
+        default 1
+        help
+            GPIO pin number to be used as GPIO_OUTPUT_DCLOCK.
+
+    config GPIO_OUTPUT_DDATA
+        int "GPIO output pin display data"
+        range 0 2
+        default 2
+        help
+            GPIO pin number to be used as GPIO_OUTPUT_DDATA.
 
 endmenu

@@ -1,3 +1,7 @@
+/* ESP32 WROOM 32
+ * https://www.espressif.com/sites/default/files/documentation/esp32-wroom-32_datasheet_en.pdf
+ */
+
 #include <stdio.h>
 #include <inttypes.h>
 #include "sdkconfig.h"
@@ -7,7 +11,12 @@
 #include "esp_flash.h"
 #include "esp_system.h"
 
-#include "wifi.h"
+// wifi.c
+extern void start_wifi();
+// putout.c
+extern void setupOutput();
+extern void outputData(uint8_t value);
+extern void pinout_test();
 
 void printChipInfo() {
     /* Print chip information */
@@ -50,4 +59,6 @@ void app_main() {
     printf("\n\n<--- DEVICE STARTED\n");
     printChipInfo();
     start_wifi();
+    
+    pinout_test();
 }
