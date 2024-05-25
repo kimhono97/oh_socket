@@ -94,6 +94,17 @@ menu "OH-Socket-ESP32 Configuration"
         default 23
         help
             GPIO pin number to be used as GPIO_OUTPUT_CLOCK.
+    
+    config GCOV_ENABLED
+        bool "Coverage analyzer"
+        default n
+        help
+            Enables coverage analyzing for host tests.
+    config WEBSOCKET_URI
+        string "Websocket endpoint URI"
+        default "ws://172.30.1.71:3000"
+        help
+            URL of websocket endpoint this example connects to and sends echo
 
     config GPIO_OUTPUT_DSTROBE
         int "GPIO output pin display strobe"
@@ -101,14 +112,12 @@ menu "OH-Socket-ESP32 Configuration"
         default 0
         help
             GPIO pin number to be used as GPIO_OUTPUT_DSTROBE.
-
     config GPIO_OUTPUT_DCLOCK
         int "GPIO output pin display clock"
         range 0 2
         default 1
         help
             GPIO pin number to be used as GPIO_OUTPUT_DCLOCK.
-
     config GPIO_OUTPUT_DDATA
         int "GPIO output pin display data"
         range 0 2

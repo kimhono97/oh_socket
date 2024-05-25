@@ -43,11 +43,11 @@ void outputData(uint8_t value) {
     gpio_set_level(GPIO_DT1, (value >> 1) & 0x1);
     gpio_set_level(GPIO_DT2, (value >> 2) & 0x1);
     gpio_set_level(GPIO_DT3, (value >> 3) & 0x1);
+    vTaskDelay(100 / portTICK_PERIOD_MS);
     gpio_set_level(GPIO_CLK, 0);
 }
 
 void pinout_test() {
-    setupOutput();
     printf("<-- pintout_test start\n");
     // gpio_set_level(GPIO_DT0, 1);
     // gpio_set_level(GPIO_DT1, 1);
@@ -59,6 +59,6 @@ void pinout_test() {
     while (true) {
         outputData(x);
         x = (x + 1) % 0x10;
-        vTaskDelay(500 / portTICK_PERIOD_MS);
+        vTaskDelay(400 / portTICK_PERIOD_MS);
     }
 }

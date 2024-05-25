@@ -15,8 +15,9 @@
 extern void start_wifi();
 // putout.c
 extern void setupOutput();
-extern void outputData(uint8_t value);
-extern void pinout_test();
+void pinout_test();
+// socket.c
+extern void websocket_start();
 
 void printChipInfo() {
     /* Print chip information */
@@ -58,7 +59,10 @@ void restart() {
 void app_main() {
     printf("\n\n<--- DEVICE STARTED\n");
     printChipInfo();
+    setupOutput();
     start_wifi();
     
+    websocket_start();
+
     pinout_test();
 }

@@ -79,6 +79,13 @@ app.prepare().then(() => {
                 }
             });
         });
+        socket.onAny(() => {
+            console.log("onAny", {
+                id: socket.id,
+                args: arguments,
+            });
+        });
+        console.log("connection", socket);
     });
 
     httpServer
