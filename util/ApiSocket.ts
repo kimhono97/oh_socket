@@ -1,5 +1,3 @@
-import { Socket, io } from "socket.io-client";
-import { DefaultEventsMap } from "socket.io/dist/typed-events";
 
 export default class ApiSocket {
     private static s_Instance?: ApiSocket;
@@ -10,22 +8,24 @@ export default class ApiSocket {
         return ApiSocket.s_Instance;
     }
 
-    private _socket: Socket<DefaultEventsMap, DefaultEventsMap>;
-    private _isApiMode: boolean;
+    private _socket: WebSocket;
     protected constructor() {
-        this._socket = io("ws://localhost:3000");
-        this._isApiMode = false;
+        this._socket = new WebSocket("ws://localhost:3000");
     }
-    public get socket(): Socket<DefaultEventsMap, DefaultEventsMap> { return this._socket; }
-    public DoAction(func: (...args: any[]) => void): void {
-        if (this._isApiMode) {
-            func();
-        } else {
-            this._socket.on("onApiMode", () => {
-                this._isApiMode = true;
-                func();
-            });
-            this._socket.emit("setApiMode");
-        }
+    public get socket(): WebSocket { return this._socket; }
+    public Send(type: string, obj: {[key:string]:any}): void {
+        obj.type = type;
+        obj.isApi = true;
+        this._socket.send(JSON.stringify(obj));
+    }
+    public OnMessage(func: Function): void {
+        this._socket.addEventListener("message", msg => {
+            func(JSON.parse(msg.toString()));
+        });
+    }
+    public OnOpen(func: Function): void {
+        this._socket.addEventListener("open", ev => {
+            func(ev);
+        });
     }
 }

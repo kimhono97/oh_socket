@@ -3,46 +3,70 @@ import Head from 'next/head'
 import styles from '../../styles/Home.module.css'
 import ActionPanel from '../comp/actionPanel'
 
-import { Socket, io } from "socket.io-client";
-import { DefaultEventsMap } from "socket.io/dist/typed-events";
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 const Home: NextPage = () => {
-    const [socket, setSocket] = useState<Socket<DefaultEventsMap, DefaultEventsMap>|null>(null);
+    const ws = useRef<WebSocket|null>(null);
+    const timeoutId = useRef<NodeJS.Timeout|null>(null);
     const [roomNames, setRoomNames] = useState<string[]>(new Array());
     const [roomId, setRoomId] = useState<string>("");
     const [actionValue, setActionValue] = useState<number>(-1);
-    const [timeoutId, setTimeoutId] = useState<NodeJS.Timeout|null>(null);
 
     useEffect(() => {
-        if (!socket) {
-            const soc = io("ws://" + location.host);
-            setSocket(soc);
-            soc.on("allRooms", (strRooms: string) => {
-                setRoomNames([""].concat(JSON.parse(strRooms)));
-            });
-            soc.on("numData", (data: string) => {
-                const nValue = parseInt(data);
-                if (!isNaN(nValue)) {
-                    setActionValue(nValue);
-                    if (timeoutId != null) {
-                        clearTimeout(timeoutId);
+        console.log("useEffect []");
+        const socket = new WebSocket(`ws://${location.hostname}:3001`);
+        socket.addEventListener("error", console.error);
+        socket.addEventListener("close", console.warn);
+        socket.addEventListener("message", ev => {
+            console.log("msg!!", ev.data);
+            const data = JSON.parse(ev.data.toString());
+            switch (data.type) {
+                case "allRooms":
+                    setRoomNames([""].concat(data.data));
+                    return;
+                case "numData":
+                    const nValue = data.data as number;
+                    if (!isNaN(nValue)) {
+                        setActionValue(nValue);
+                        if (timeoutId.current != null) {
+                            clearTimeout(timeoutId.current);
+                        }
+                        timeoutId.current = setTimeout(() => {
+                            setActionValue(-1);
+                            timeoutId.current = null;
+                        }, 300);
                     }
-                    setTimeoutId(setTimeout(() => {
-                        setActionValue(-1);
-                        setTimeoutId(null);
-                    }, 300));
-                }
+                    return;
+            }
+        });
+        if (socket.readyState == socket.OPEN) {
+            console.log("already OPEN - Send");
+            socket.send(JSON.stringify({
+                type: "getAllRooms"
+            }));
+        } else {
+            socket.addEventListener("open", ev => {
+                console.log("OPEN - Send");
+                socket.send(JSON.stringify({
+                    type: "getAllRooms"
+                }));
             });
-            soc.emit("getAllRooms");
         }
+        ws.current = socket;
     }, []);
     useEffect(() => {
-        if (!socket) return;
+        const socket = ws.current;
+        if (!socket || socket.readyState != socket.OPEN) return;
+        console.log("useEffect [roomId]", roomId);
         if (roomId) {
-            socket.emit("moveToRoom", roomId);
+            socket.send(JSON.stringify({
+                type: "moveToRoom",
+                roomId
+            }));
         } else {
-            socket.emit("leaveRooms");
+            socket.send(JSON.stringify({
+                type: "leaveRooms",
+            }));
         }
     }, [roomId]);
 
