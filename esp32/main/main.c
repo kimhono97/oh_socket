@@ -61,8 +61,6 @@ void app_main() {
     printChipInfo();
     setupOutput();
     start_wifi();
-    
     websocket_start();
-
     pinout_test();
 }

@@ -105,6 +105,11 @@ menu "OH-Socket-ESP32 Configuration"
         default "ws://172.30.1.71:3000"
         help
             URL of websocket endpoint this example connects to and sends echo
+    config WEBSOCKET_ROOM
+        string "Websocket room name"
+        default "esp32"
+        help
+            Room name to join in websocket
 
     config GPIO_OUTPUT_DSTROBE
         int "GPIO output pin display strobe"

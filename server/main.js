@@ -44,12 +44,12 @@ function leaveRoom(socket) {
 const wss = new WebSocketServer({ port: 3001 });
 wss.on("connection", (socket, req) => {
     socket.id = `${(new Date().getTime())}/${Math.floor(Math.random() * 10)}`;
-    console.log("WS Connection!", socket.id);
+    // console.log("WS Connection!", socket.id);
 
     socket.on("error", console.error);
     socket.on("close", () => {
         leaveRoom(socket);
-        console.log("WS Closed!", socket.id);
+        // console.log("WS Closed!", socket.id);
     });
     socket.on("message", rawData => {
         const data = JSON.parse(rawData.toString());
@@ -61,11 +61,11 @@ wss.on("connection", (socket, req) => {
                     socket.send({
                         type: "newRoom", roomId
                     });
-                    console.log("rooms :", Object.keys(pRooms));
+                    // console.log("rooms :", Object.keys(pRooms));
                     return;
                 case "clearRooms":
                     pRooms = new Object();
-                    console.log("rooms :", Object.keys(pRooms));
+                    // console.log("rooms :", Object.keys(pRooms));
                     return;
                 case "sendNumber":
                     if (data.roomId && typeof data.data == "number") {
@@ -73,10 +73,10 @@ wss.on("connection", (socket, req) => {
                             joinRoom(socket, data.roomId);
                         }
                         console.log("sendNumber", data.data, "to", data.roomId);
-                        console.log("socket ids :", pRooms[data.roomId]);
+                        // console.log("socket ids :", pRooms[data.roomId]);
                         wss.clients.forEach(ws => {
                             if (ws.id != socket.id && pRooms[data.roomId].indexOf(ws.id) != -1) {
-                                console.log("num", data.data, "to", ws.id);
+                                // console.log("num", data.data, "to", ws.id);
                                 ws.send(JSON.stringify({
                                     type: "numData",
                                     data: data.data,
@@ -87,7 +87,7 @@ wss.on("connection", (socket, req) => {
                     return;
             }
         }
-        console.log(socket.id, data);
+        // console.log(socket.id, data);
         switch (data.type) {
             case "getAllRooms":
                 socket.send(JSON.stringify({
@@ -96,11 +96,11 @@ wss.on("connection", (socket, req) => {
                 }));
                 return;
             case "moveToRoom":
-                if (data.roomId && pRooms[data.roomId] != null) {
+                if (data.roomId) {
                     leaveRoom(socket);
                     joinRoom(socket, data.roomId);
                     console.log("moveToRoom", socket.id, data.roomId);
-                    console.log(pRooms);
+                    // console.log(pRooms);
                 }
                 return;
             case "leaveRooms":

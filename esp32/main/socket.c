@@ -18,6 +18,9 @@
 #include "esp_log.h"
 #include "esp_netif.h"
 
+// putout.c
+extern void outputData(uint8_t value);
+
 static const char *TAG = "websocket";
 
 static void log_error_if_nonzero(const char *message, int error_code) {
@@ -69,11 +72,9 @@ static void websocket_event_handler(void *handler_args, esp_event_base_t base, i
 
 static void websocket_app_start(void) {
     esp_websocket_client_config_t websocket_cfg = {};
-
+    const char* room_name = CONFIG_WEBSOCKET_ROOM;
     websocket_cfg.uri = CONFIG_WEBSOCKET_URI;
-    websocket_cfg.port = 3000;
     websocket_cfg.buffer_size = 2048;
-    websocket_cfg.disable_auto_reconnect = true;
 
     ESP_LOGI(TAG, "Connecting to %s...", websocket_cfg.uri);
 
@@ -87,25 +88,33 @@ static void websocket_app_start(void) {
 
     esp_websocket_client_start(client);
     ESP_LOGI(TAG, "Client Started.");
-    char data[32];
-    int i = 0;
-    while (i < 1) {
-        if (esp_websocket_client_is_connected(client)) {
-            int len = sprintf(data, "hello %04d", i++);
-            ESP_LOGI(TAG, "Sending %s", data);
-            esp_websocket_client_send_text(client, data, len, portMAX_DELAY);
-        }
+    char data[128];
+    // int i = 0;
+    // while (i < 3) {
+    //     if (esp_websocket_client_is_connected(client)) {
+    //         int len = sprintf(data, "hello %04d", i++);
+    //         ESP_LOGI(TAG, "Sending %s", data);
+    //         esp_websocket_client_send_text(client, data, len, portMAX_DELAY);
+    //     }
+    //     vTaskDelay(1000 / portTICK_PERIOD_MS);
+    // }
+    // ESP_LOGI(TAG, "Sending fragmented message");
+    // vTaskDelay(1000 / portTICK_PERIOD_MS);
+    // memset(data, 'a', sizeof(data));
+    // esp_websocket_client_send_text_partial(client, data, sizeof(data), portMAX_DELAY);
+    // memset(data, 'b', sizeof(data));
+    // esp_websocket_client_send_cont_msg(client, data, sizeof(data), portMAX_DELAY);
+    // esp_websocket_client_send_fin(client, portMAX_DELAY);
+    while (!esp_websocket_client_is_connected(client)) {
         vTaskDelay(1000 / portTICK_PERIOD_MS);
     }
-
-    ESP_LOGI(TAG, "Sending fragmented message");
-    vTaskDelay(1000 / portTICK_PERIOD_MS);
-    memset(data, 'a', sizeof(data));
-    esp_websocket_client_send_text_partial(client, data, sizeof(data), portMAX_DELAY);
-    memset(data, 'b', sizeof(data));
-    esp_websocket_client_send_cont_msg(client, data, sizeof(data), portMAX_DELAY);
-    esp_websocket_client_send_fin(client, portMAX_DELAY);
-
+    ESP_LOGI(TAG, "Joining the Room '%s'...", room_name);
+    int len = sprintf(data, "{\"type\":\"moveToRoom\", \"roomId\":\"%s\"}", room_name);
+    esp_websocket_client_send_text(client, data, len, portMAX_DELAY);
+    while (esp_websocket_client_is_connected(client)) {
+        vTaskDelay(10000 / portTICK_PERIOD_MS);
+    }
+    ESP_LOGI(TAG, "Client Finished.");
     esp_websocket_client_destroy(client);
 }
 
