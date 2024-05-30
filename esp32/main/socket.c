@@ -18,8 +18,7 @@
 #include "esp_log.h"
 #include "esp_netif.h"
 
-// putout.c
-extern void outputData(uint8_t value);
+static void (*s_data_listener)(const char*, int) = NULL;
 
 static const char *TAG = "websocket";
 
@@ -55,6 +54,10 @@ static void websocket_event_handler(void *handler_args, esp_event_base_t base, i
 
         // If received data contains json structure it succeed to parse
         ESP_LOGW(TAG, "Total payload length=%d, data_len=%d, current payload offset=%d\r\n", data->payload_len, data->data_len, data->payload_offset);
+        
+        if (s_data_listener != NULL) {
+            s_data_listener((char *)data->data_ptr, data->data_len);
+        }
 
         break;
     case WEBSOCKET_EVENT_ERROR:
@@ -118,7 +121,7 @@ static void websocket_app_start(void) {
     esp_websocket_client_destroy(client);
 }
 
-void websocket_start() {
+void websocket_start(void (*data_listener)(const char*, int)) {
     ESP_LOGI(TAG, "[APP] Startup..");
     ESP_LOGI(TAG, "[APP] Free memory: %" PRIu32 " bytes", esp_get_free_heap_size());
     ESP_LOGI(TAG, "[APP] IDF version: %s", esp_get_idf_version());
@@ -127,5 +130,7 @@ void websocket_start() {
     esp_log_level_set("transport_ws", ESP_LOG_DEBUG);
     esp_log_level_set("trans_tcp", ESP_LOG_DEBUG);
 
+    s_data_listener = data_listener;
     websocket_app_start();
+    s_data_listener = NULL;
 }
