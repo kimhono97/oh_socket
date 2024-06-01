@@ -16,6 +16,7 @@ In the `Example Configuration` menu:
 
 * Set the WebSocket configuration.
     * Set `WEBSOCKET_URI`.
+    * Set `WEBSOCKET_ROOM`.
 
 Optional: If you need, change the other options according to your requirements.
 

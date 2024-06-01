@@ -2,23 +2,69 @@ This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next
 
 ## Getting Started
 
-First, run the development server:
+### Run the server
+
+- Install Node.js (v20.12.2 recomanded)
 
 ```bash
-npm run dev
-# or
-yarn dev
+# Check if Node.js is installed
+$ node -v
+v20.12.2
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+- Install Node.js libraries
 
-You can start editing the page by modifying `pages/index.tsx`. The page auto-updates as you edit the file.
+```bash
+$ cd <repo-dir>
+$ npm i
+```
 
-[API routes](https://nextjs.org/docs/api-routes/introduction) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.ts`.
+- Run
 
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/api-routes/introduction) instead of React pages.
+```bash
+$ npm run build
+$ npm run start
+```
 
-## Learn More
+
+### Open test web pages
+
+Open [http://localhost:3000](http://localhost:3000) with your browser to see the test pages (sender or receiver).
+
+
+### Sender : Send the number data into a room
+
+Request the following HTTP GET request to the server (:3000)
+```
+GET /api/sendNumber?room=<room-name>&data=<number>
+```
+
+### Receiver : Join a room
+
+- Connect to `ws://localhost:3001`
+
+- Send the following JSON text
+```json
+{
+    "type": "moveToRoom",
+    "roomId": "<room-name-to-join>"
+}
+```
+
+- Listen the following JSON text
+```json
+{
+    "type": "numData",
+    "data": 7 
+}
+```
+
+## Receiver Example ESP32
+
+See [esp32/README.md](https://github.com/kimhono97/oh_socket/blob/main/esp32/README.md)
+
+
+## Learn More Next.js
 
 To learn more about Next.js, take a look at the following resources:
 
@@ -26,9 +72,3 @@ To learn more about Next.js, take a look at the following resources:
 - [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
 
 You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
