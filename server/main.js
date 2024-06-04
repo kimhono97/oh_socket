@@ -22,8 +22,14 @@ app.prepare().then(() => {
 });
 
 let nNextRoomId = 0;
-const pRooms = new Object();
+let pRooms = new Object();
 
+function getRooms() {
+    return pRooms;
+}
+function clearRooms() {
+    pRooms = new Object();
+}
 function joinRoom(socket, roomId) {
     if (!socket.id) return;
     if (pRooms[roomId] == null) {
@@ -61,21 +67,21 @@ wss.on("connection", (socket, req) => {
                     socket.send({
                         type: "newRoom", roomId
                     });
-                    // console.log("rooms :", Object.keys(pRooms));
+                    // console.log("rooms :", Object.keys(getRooms()));
                     return;
                 case "clearRooms":
-                    pRooms = new Object();
-                    // console.log("rooms :", Object.keys(pRooms));
+                    clearRooms();
+                    // console.log("rooms :", Object.keys(getRooms()));
                     return;
                 case "sendNumber":
                     if (data.roomId && typeof data.data == "number") {
-                        if (pRooms[data.roomId] == null) {
+                        if (getRooms()[data.roomId] == null) {
                             joinRoom(socket, data.roomId);
                         }
                         console.log("sendNumber", data.data, "to", data.roomId);
-                        // console.log("socket ids :", pRooms[data.roomId]);
+                        // console.log("socket ids :", getRooms()[data.roomId]);
                         wss.clients.forEach(ws => {
-                            if (ws.id != socket.id && pRooms[data.roomId].indexOf(ws.id) != -1) {
+                            if (ws.id != socket.id && getRooms()[data.roomId].indexOf(ws.id) != -1) {
                                 // console.log("num", data.data, "to", ws.id);
                                 ws.send(JSON.stringify({
                                     type: "numData",
@@ -92,7 +98,7 @@ wss.on("connection", (socket, req) => {
             case "getAllRooms":
                 socket.send(JSON.stringify({
                     type: "allRooms",
-                    data: Object.keys(pRooms),
+                    data: Object.keys(getRooms()),
                 }));
                 return;
             case "moveToRoom":
