@@ -9,17 +9,31 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse<Data>
 ) {
-  const strRoom = req.query.room;
-  const pData = req.query.data;
-  if (typeof pData != "string") {
+  let strRoom: string|undefined = "";
+  let strData: string|undefined = "";
+  if (req.method == "POST") {
+    const strBody = req.body.toString();
+    const nStartIndex = strBody.indexOf("{");
+    if (nStartIndex < 0) {
+      res.status(400).json({ msg: "invalid post parameter" });
+      return;
+    }
+    const pJson = JSON.parse(strBody.slice(nStartIndex));
+    strRoom = pJson.room?.toString();
+    strData = pJson.data?.toString();
+  } else if (req.method == "GET") {
+    strRoom = req.query.room?.toString();
+    strData = req.query.data?.toString();
+  }
+  if (typeof strData != "string" || !strData) {
     res.status(400).json({ msg: "data required" });
     return;
   }
-  if (typeof strRoom != "string") {
+  if (typeof strRoom != "string" || !strRoom) {
     res.status(400).json({ msg: "room required" });
     return;
   }
-  const nData = parseInt(pData);
+  const nData = parseInt(strData);
   if (isNaN(nData)) {
     res.status(400).json({ msg: "not a number" });
     return;

@@ -34,7 +34,7 @@ const Home: NextPage = () => {
                 }} />
             </div>
             <div style={{
-                width: "200px",
+                width: "250px",
                 display: "flex",
                 flexDirection: "row",
                 justifyContent: "space-around",
@@ -55,7 +55,11 @@ const Home: NextPage = () => {
             <hr className={styles.divider}/>
             <ActionPanel onAction={selIndex => {
                 if (roomId) {
-                    fetch(location.origin + `/api/sendNumber?room=${roomId}&data=${selIndex}`);
+                    // fetch(location.origin + `/api/sendNumber?room=${roomId}&data=${selIndex}`);
+                    fetch(location.origin + `/api/sendNumber`, {
+                        method: "POST",
+                        body: JSON.stringify({ room: roomId, data: selIndex }),
+                    });
                 }
             }}/>
         </main>
