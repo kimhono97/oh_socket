@@ -34,9 +34,19 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to see the
 
 ### Sender : Send the number data into a room
 
-Request the following HTTP GET request to the server (:3000)
+Request the following HTTP GET/POST to the server (:3000)
+```http
+GET http://localhost:3000/api/sendNumber?room=myRoomName&data=7
 ```
-GET /api/sendNumber?room=<room-name>&data=<number>
+or
+```http
+POST http://localhost:3000/api/sendNumber
+Content-Type: application/json
+
+{
+    "room": "myRoomName",
+    "data": 7
+}
 ```
 
 ### Receiver : Join a room
