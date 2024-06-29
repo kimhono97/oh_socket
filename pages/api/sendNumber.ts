@@ -2,8 +2,11 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 
 type Data = {
-  msg: string
+  response: string,
+  verify: string,
 }
+
+const default_verify_token = "5bf268c4-3b9e-4f28-a937-3bfd0b0ba56f";
 
 export default async function handler(
   req: NextApiRequest,
@@ -11,31 +14,54 @@ export default async function handler(
 ) {
   let strRoom: string|undefined = "";
   let strData: string|undefined = "";
+  let verify_token = default_verify_token;
   if (req.method == "POST") {
     const strBody = req.body.toString();
+    console.log("POST /api/sendNumber\n\t" + strBody);
     const nStartIndex = strBody.indexOf("{");
     if (nStartIndex < 0) {
-      res.status(400).json({ msg: "invalid post parameter" });
+      res.status(400).json({
+        response: "invalid post parameter",
+        verify: verify_token,
+      });
       return;
     }
-    const pJson = JSON.parse(strBody.slice(nStartIndex));
+    let pJson = JSON.parse(strBody.slice(nStartIndex));
+    if (pJson.request) {
+      pJson = JSON.parse(pJson.request.toString());
+    }
     strRoom = pJson.room?.toString();
     strData = pJson.data?.toString();
+    if (pJson.verify) {
+      verify_token = pJson.verify.toString();
+    }
   } else if (req.method == "GET") {
     strRoom = req.query.room?.toString();
     strData = req.query.data?.toString();
+    if (req.query.verify) {
+      verify_token = req.query.verify.toString();
+    }
   }
   if (typeof strData != "string" || !strData) {
-    res.status(400).json({ msg: "data required" });
+    res.status(400).json({
+      response: "data required",
+      verify: verify_token,
+    });
     return;
   }
   if (typeof strRoom != "string" || !strRoom) {
-    res.status(400).json({ msg: "room required" });
+    res.status(400).json({
+      response: "room required",
+      verify: verify_token,
+    });
     return;
   }
   const nData = parseInt(strData);
   if (isNaN(nData)) {
-    res.status(400).json({ msg: "not a number" });
+    res.status(400).json({
+      response: "not a number",
+      verify: verify_token,
+    });
     return;
   }
   const ws = new WebSocket("ws://localhost:3001");
@@ -48,5 +74,8 @@ export default async function handler(
     }));
     ws.close();
   });
-  res.status(200).json({ msg: "requested" });
+  res.status(200).json({
+    response: "requested successfully",
+    verify: verify_token,
+  });
 }
