@@ -16,7 +16,7 @@ export default async function handler(
   let strData: string|undefined = "";
   let verify_token = default_verify_token;
   if (req.method == "POST") {
-    const strBody = req.body.toString();
+    const strBody = (typeof req.body == "object") ? JSON.stringify(req.body) : req.body.toString() as string;
     console.log("POST /api/sendNumber\n\t" + strBody);
     const nStartIndex = strBody.indexOf("{");
     if (nStartIndex < 0) {
