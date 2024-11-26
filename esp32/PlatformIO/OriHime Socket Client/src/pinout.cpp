@@ -16,16 +16,16 @@ void setupPinOut() {
 
 void outputData(uint8_t value) {
     digitalWrite(PINOUT_CLK, HIGH);
-    digitalWrite(PINOUT_DT0, ((value >> 0) & 0x1) ? HIGH : LOW);
-    digitalWrite(PINOUT_DT1, ((value >> 1) & 0x1) ? HIGH : LOW);
-    digitalWrite(PINOUT_DT2, ((value >> 2) & 0x1) ? HIGH : LOW);
-    digitalWrite(PINOUT_CLK, ((value >> 3) & 0x1) ? HIGH : LOW);
+    digitalWrite(PINOUT_DT0, ((value >> 3) & 0x1) ? HIGH : LOW);
+    digitalWrite(PINOUT_DT1, ((value >> 2) & 0x1) ? HIGH : LOW);
+    digitalWrite(PINOUT_DT2, ((value >> 1) & 0x1) ? HIGH : LOW);
+    digitalWrite(PINOUT_DT3, ((value >> 0) & 0x1) ? HIGH : LOW);
     delay(100);
     digitalWrite(PINOUT_CLK, LOW);
 }
 
 void testPinOut() {
-    printf("<-- pintout_test start\n");
+    Serial.println("<-- pintout test loop");
     uint8_t x = 0;
     while (true) {
         outputData(x);
