@@ -71,7 +71,7 @@ Content-Type: application/json
 
 ## Receiver Example ESP32
 
-See [esp32/README.md](https://github.com/kimhono97/oh_socket/blob/main/esp32/README.md)
+See [esp32/ESP-IDF/README.md](https://github.com/kimhono97/oh_socket/blob/main/esp32/README.md) or [esp32/PlatformIO/README.md](https://github.com/kimhono97/oh_socket/blob/main/esp32/PlatformIO/README.md)
 
 
 ## Learn More Next.js
