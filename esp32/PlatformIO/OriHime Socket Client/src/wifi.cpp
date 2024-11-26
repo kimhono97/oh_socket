@@ -3,7 +3,7 @@
 
 const char* WIFI_SSID = "KT_GiGA_1346";
 const char* WIFI_PASS = "5cea1zh557";
-const char* TEST_URL = "http://172.30.1.81:3000";
+const char* TEST_URL = "http://15.164.244.8:3000";
 
 void setupWiFi() {
     Serial.print("*** Connecting to Wi-Fi ");
