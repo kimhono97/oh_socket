@@ -59,7 +59,7 @@ const Home: NextPage = () => {
                     <input type="checkbox" id="chkSeqView" checked={isSequential} onChange={ev => {
                         setSequential(ev.target.checked);
                     }}/>
-                    Sequantial View
+                    Sequential View
                 </label>
             </div>
             <ActionPanel isSequential={isSequential} onAction={selIndex => {
