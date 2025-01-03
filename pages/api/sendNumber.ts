@@ -6,7 +6,7 @@ type Data = {
   verify: string,
 }
 
-const default_verify_token = "9ae4fb76-3ee0-43ef-8b13-ce9ada21b85f";
+const default_verify_token = "3e6d148a-3e70-43fb-9cdb-1383dabdf517";
 
 export default async function handler(
   req: NextApiRequest,
