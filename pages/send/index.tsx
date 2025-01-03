@@ -6,6 +6,7 @@ import { useState } from 'react'
 
 const Home: NextPage = () => {
     const [roomId, setRoomId] = useState<string>((new Date()).getTime().toString(16));
+    const [isSequential, setSequential] = useState<boolean>(false);
     return (
         <div className={styles.container}>
         <Head>
@@ -53,7 +54,15 @@ const Home: NextPage = () => {
                 }}>Clear Rooms</button>
             </div>
             <hr className={styles.divider}/>
-            <ActionPanel onAction={selIndex => {
+            <div style={{ marginBottom: "1em" }}>
+                <label htmlFor="chkSeqView">
+                    <input type="checkbox" id="chkSeqView" checked={isSequential} onChange={ev => {
+                        setSequential(ev.target.checked);
+                    }}/>
+                    Sequantial View
+                </label>
+            </div>
+            <ActionPanel isSequential={isSequential} onAction={selIndex => {
                 if (roomId) {
                     // fetch(location.origin + `/api/sendNumber?room=${roomId}&data=${selIndex}`);
                     fetch(location.origin + `/api/sendNumber`, {

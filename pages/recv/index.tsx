@@ -11,6 +11,7 @@ const Home: NextPage = () => {
     const [roomNames, setRoomNames] = useState<string[]>(new Array());
     const [roomId, setRoomId] = useState<string>("");
     const [actionValue, setActionValue] = useState<number>(-1);
+    const [isSequential, setSequential] = useState<boolean>(false);
 
     useEffect(() => {
         console.log("useEffect []");
@@ -90,7 +91,7 @@ const Home: NextPage = () => {
                 }}>
                     <span style={{
                         margin: "0 1rem",
-                    }}>Room :</span>
+                    }}>Room:</span>
                     <select value={roomId} style={{
                         flex: "1 1 auto",
                         borderRadius: "0",
@@ -109,7 +110,15 @@ const Home: NextPage = () => {
                 <span>Now Loading Room List...</span>
             )}
             <hr className={styles.divider}/>
-            <ActionPanel disabled={true} selectedIndex={actionValue} />
+            <div style={{ marginBottom: "1em" }}>
+                <label htmlFor="chkSeqView">
+                    <input type="checkbox" id="chkSeqView" checked={isSequential} onChange={ev => {
+                        setSequential(ev.target.checked);
+                    }}/>
+                    Sequantial View
+                </label>
+            </div>
+            <ActionPanel disabled={true} selectedValue={actionValue} isSequential={isSequential} />
         </main>
         </div>
     )
